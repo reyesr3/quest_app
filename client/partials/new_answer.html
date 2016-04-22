@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>New Answer</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<style>
+		#container{
+			width: 980px;
+		}
+
+			#question_box{
+				margin-left: 16px;
+			}
+			textarea{
+				vertical-align: top;
+			}
+
+			a{
+				text-decoration: none;
+			}
+
+	</style>
+</head>
+<body>
+<div id="container">
+	<a href="#/success">Home</a> | <a href="#/new_question">Add Question</a> 
+		<br>
+	<a href="#/">Logout</a>
+	<div id="new_quest" ng-controller="showsController">
+		<h2>Question:</h2>
+		<h4>{{ questions.title }}</h4>
+		<h2>Description:</h2>
+		<h4>{{ questions.description }}</h4>
+
+	<h3>Provide an Answer below:</h3>
+	<form ng-submit="addAnswer(answer)">
+			<p>
+				Your Answer:
+				<input id="question_box" type="text" ng-model="answer.answer">
+			</p>
+			<p>
+				Description:
+				<textarea ng-model="answer.description"></textarea>
+			</p>
+			<a href="#/success"><button class="btn btn-danger btn-sm">Cancel</button></a>
+			<button class="btn btn-primary btn-sm">Submit</button>
+		</form>	
+	</div>
+</div>
+</body>
+</html>

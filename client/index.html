@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html ng-app='questionApp'>
+<head>
+  <title>Ask a Question</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+  <script>
+    //angular module
+    var questionApp = angular.module('questionApp', ['ngRoute'])
+      questionApp.config(function($routeProvider){
+        $routeProvider
+          .when('/', {
+            templateUrl: "/partials/login.html"
+          })
+          .when('/success', {
+            templateUrl: "/partials/questions.html"
+          })
+          .when('/new_question', {
+            templateUrl: "/partials/new_question.html"
+          })
+          .when('/question/:id', {
+            templateUrl: "/partials/show.html"
+          })
+          .when('/answer/:id', {
+            templateUrl: "/partials/new_answer.html"
+          })
+          .otherwise({
+            redirectTo: '/'
+          });
+      }) 
+
+    var currentUser = null;
+
+    //User Factory
+    questionApp.factory('userFactory', function($http, $location) { 
+      var factory = {};
+
+
+      factory.findUser = function(callback) {
+        if(currentUser) {
+          callback(currentUser)
+        } else {
+          $location.path('/');  
+        }
+      }
+
+      factory.login = function(user, callback) {
+        $http.post('/login', user).then(function(res) {
+          currentUser = res.data;
+          callback();
+        });
+      };
+      return factory;
+    });
+
+    //Question Factory
+    questionApp.factory('questionFactory', function($http, $location){
+      var factory = {};
+      var currentUser = null;
+
+      factory.index = function(callback){
+          $http.get('/questions').then(function(res){
+            callback(res);
+            console.log(res);
+          })
+      }
+
+
+
+      factory.addQuestion = function(question, userId, callback){
+        question.userId = userId
+        $http.post('/new_question', question).then(function(res){
+          callback();
+        });
+      };
+      return factory; 
+    });
+
+    //Show Factory
+    questionApp.factory('showFactory', function($http, $location){
+        var factory = {};
+
+        factory.viewQuestion = function(id, callback) {
+          $http.get('/question/'+id).success(function(data) {
+            console.log(data);
+            callback(data);
+          })
+        };
+        return factory;
+    });
+
+    //Users Controller
+    questionApp.controller('usersController', function($scope, userFactory, $location){
+
+      $scope.login = function(user) {
+        userFactory.login(user, function(){
+          userFactory.findUser(function(data){
+            $location.path('/success');
+          });
+        });
+      };
+    });
+
+    //Questions Controller
+    questionApp.controller('questionsController', function($scope, questionFactory, userFactory, $location){
+        
+        userFactory.findUser(function(user){
+          if(currentUser) {
+            currentUser = user
+          } else {
+            $location.path('/');  
+          }
+        });
+
+        questionFactory.index(function(data){
+            $scope.questions = data.data;
+            console.log(data.data);
+        });
+
+      $scope.addQuestion = function(question){
+        console.log(question);
+        console.log(currentUser);
+        questionFactory.addQuestion(question, currentUser._id, function(){ 
+            $location.path('/new_question');
+          });
+      };
+    });
+
+    //Show Controller 
+    questionApp.controller('showsController', function($scope, showFactory, $routeParams){
+      var id = $routeParams.id;
+
+        showFactory.viewQuestion(id, function(data) {
+          $scope.questions = data;
+        });
+    });
+
+  </script>
+</head>
+<body>
+  <div ng-view>
+  </div>
+</body>
+</html>

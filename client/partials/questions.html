@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Questions Page</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<style>
+		#container{
+			width: 980px;
+		}
+
+			#search_box{
+				margin-top: 50px;
+			}
+
+			#table_display{
+				width: 700px;
+				margin-top: 10px
+			}
+	</style>
+</head>
+<body>
+<div id="container">
+	<a href="#/success">Home</a> | <a href="#/new_question">Add Question</a> 
+		<br>
+	<a href="#/">Logout</a>
+	<div id="search_box">
+		Search: <input type="text" ng-model="filter_name">
+	<div>
+	<div id="table_display" ng-controller="questionsController">
+		<table class="table table-bordered table-striped table-hover">
+			<thead>
+				<tr>
+					<th>Question</th>
+					<th>Answers</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="question in questions | filter: filter_name">
+					<td>{{ question.title }}</td>
+					<td></td>
+					<td>
+						<a href="#/question/{{ question._id }}">Show</a> | <a href="#/answer/{{ question._id }}">Answer</a></td>
+				</tr>
+			</tbody>
+	</div>
+</div>
+</body>
+</html>

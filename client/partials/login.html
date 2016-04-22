@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Page</title>
+</head>
+<body>
+	<div id="login_box" ng-controller="usersController">
+		<h2>Please Enter Your Name</h2>
+		<form ng-submit="login(user)">
+			<input type="text" ng-model="user.name">
+			<button>Login</button>
+		</form>
+	</div>
+</body>
+</html>
